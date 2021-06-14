@@ -7,7 +7,7 @@ const data = require('./data/weather.json');
 app.use(cors()) // after you initialize your express app instance
 
 require('dotenv').config();
-const port = process.env.port;
+const port = process.env.PORT;
 // a server endpoint 
 app.get('/', // our endpoint name
     function (req, res) { // callback function of what we should do with our request
