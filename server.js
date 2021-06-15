@@ -1,31 +1,59 @@
-
-const express = require('express') // require the express package
-const app = express() // initialize your express app instance
+const express = require('express') 
+const app = express() 
 const cors = require('cors');
 const data = require('./data/weather.json');
-
-app.use(cors()) // after you initialize your express app instance
+app.use(cors()) 
+const axios = require('axios');
 require('dotenv').config();
 const port = process.env.PORT;
+const WEATHER_BIT_KEY = process.env.WEATHER_BIT_KEY;
 
-class Forecast {
-    constructor(description,date){
-        this.date=date,
-        this.description=description
-    }
+// class Forecast {
+//     constructor(description,date){
+//         this.date=date,
+//         this.description=description
+//     }
     
+// }
+
+app.get('/', 
+    function (req, res) { 
+        res.send('Hello') 
+    })
+// app.get('/weather', 
+//     function (req, res) { 
+//         const cityWeather=data['data'].map((val)=>new Forecast(val.weather.description,val.datetime))
+//         console.log(cityWeather)
+//         res.json(cityWeather)
+//     })
+
+
+app.get('/weather', (req, res) => {
+
+    const lat = req.query.lat;
+    const lon = req.query.lon;
+    if (lat && lon) {
+        const weatherBitUrl = `https://api.weatherbit.io/v2.0/forecast/daily?key=${WEATHER_BIT_KEY}&lat=${lat}&lon=${lon}`;
+        axios.get(weatherBitUrl).then(response => {
+            const responseData = response.data.data.map(obj => new Weather(obj));
+            res.json(responseData)
+        }).catch(error => {
+            res.send(error.message)
+        });
+    } else {
+        res.send('please provide the proper lat and lon')
+    }
+
+
+});
+
+class Weather {
+    constructor(weatherData) {
+        this.description = weatherData.weather.description;
+        this.date = weatherData.valid_date;
+
+    }
 }
-// a server endpoint 
-app.get('/', // our endpoint name
-    function (req, res) { // callback function of what we should do with our request
-        res.send('Hello') // our endpoint function response
-    })
-app.get('/weather', // our endpoint name
-    function (req, res) { // callback function of what we should do with our request
-        const cityWeather=data['data'].map((val)=>new Forecast(val.weather.description,val.datetime))
-        console.log(cityWeather)
-        res.json(cityWeather) // our endpoint function response
-    })
 
 
-app.listen(port) // kick start the express server to work
+app.listen(port) 
