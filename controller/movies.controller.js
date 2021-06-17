@@ -3,7 +3,6 @@ const Movie = require('../models/movies.model');
 require('dotenv').config();
 const MOVIES_BIT_KEY = process.env.MOVIES_BIT_KEY;
 
-
 const moviesController = async(req,res)=>{
     const cityName =req.query.cityName
     try{

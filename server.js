@@ -6,7 +6,7 @@ app.use(cors())
 const axios = require('axios');
 require('dotenv').config();
 const port = process.env.PORT;
-const WEATHER_BIT_KEY = process.env.WEATHER_BIT_KEY;
+
 const weatherController = require('./controller/weather.controller');
 const indexController = require('./controller/index.controller');
 const moviesController = require('./controller/movies.controller');
@@ -19,4 +19,4 @@ app.get('/weather',weatherController)
 
 app.get('/movies',moviesController)
 
-app.listen(port) 
+app.listen(port)
